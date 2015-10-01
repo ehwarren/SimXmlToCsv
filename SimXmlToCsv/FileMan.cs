@@ -36,21 +36,38 @@ namespace SimXmlToCsv
 
         public void parseFiles()
         {
+            //Load the XML data for the original file
             XDocument orig = XDocument.Load(originalFile[0]);
 
+            //Loop through each of the files we want to compare the original for..
             foreach (String fname in fileList)
             {
                 Console.WriteLine("Parsing: " + fname);
-                List<String> values = new List<String>();
+                //This list is used to store the values we grab from the XML files. 
+                //Each of the list values will eventuall be one line in our CSV file.
+                List<String> values = new List<String>(); 
+                
+                //Load the xml data for the file we are comparing          
                 XDocument doc = XDocument.Load(fname);
+
+                //Make the first lines of our CSV file some useful headers.
                 values.Add("ORIGINAL DATA,,,,,,,,CHANGED DATA");
                 values.Add("shapeId, lugIndex, name, grade, price, volume,,shapeId, lugIndex, name, grade, price, volume,isDifferent");
+
+                //Loop through all of the XML data..
                 for (int j = 0; j < doc.Root.Elements().Count(); j++)
                 {
+                    //Flag to see if the original data(only checking name), is differnet from the other file
                     bool isDifferent = false;
+
+                    //Create our xelement for this section of original, and modified data
                     XElement orig_data = orig.Root.Elements().ElementAt(j);
                     XElement element = doc.Root.Elements().ElementAt(j);
+
+                    //Declare an empty string to be used as a placeholder for data before we add it to the String List values.
                     string entry = "";
+
+                    //Loop through each element in that section of of the XML file. Add the original data, then the changed data, and then compare
                     for (int i=0; i < element.Elements().Count(); i++)
                     {
                         try
@@ -58,6 +75,7 @@ namespace SimXmlToCsv
                             //we only keep shapeId, lugIndex, name, grade, price and volume
                             if (element.Elements().ElementAt(i).Name.LocalName == "shapeId" || element.Elements().ElementAt(i).Name.LocalName == "lugIndex" || element.Elements().ElementAt(i).Name.LocalName == "name" || element.Elements().ElementAt(i).Name.LocalName == "grade" || element.Elements().ElementAt(i).Name.LocalName == "price")
                             {
+                                //This is to account for a no solution 
                                 if (element.Elements().ElementAt(i).Name.LocalName == "price" && orig_data.Elements().ElementAt(i).Value == "0.0")
                                     entry += ",,";
                                 entry += (orig_data.Elements().ElementAt(i).Value + ",");
@@ -78,6 +96,8 @@ namespace SimXmlToCsv
                             //we only keep shapeId, lugIndex, name, grade, price and volume
                             if (element.Elements().ElementAt(i).Name.LocalName == "shapeId" || element.Elements().ElementAt(i).Name.LocalName == "lugIndex" || element.Elements().ElementAt(i).Name.LocalName == "name" || element.Elements().ElementAt(i).Name.LocalName == "grade" || element.Elements().ElementAt(i).Name.LocalName == "price")
                             {
+                                if (element.Elements().ElementAt(i).Name.LocalName == "price" && orig_data.Elements().ElementAt(i).Value == "0.0")
+                                    entry += ",,";
                                 entry += (element.Elements().ElementAt(i).Value + ",");
                             }
                             else if (element.Elements().ElementAt(i).Name.LocalName == "volume")
