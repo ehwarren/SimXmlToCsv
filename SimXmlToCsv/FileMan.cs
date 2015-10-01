@@ -90,25 +90,9 @@ namespace SimXmlToCsv
                                 if (element.Elements().ElementAt(i).Value != orig_data.Elements().ElementAt(i).Value)
                                     isDifferent = true;
                             }
-                            //values.Add(el.Attribute("Value").Value.ToString());
                         }
                         catch { }
                     }
-                    /*
-                    foreach (XElement el in element.Elements())
-                    {
-                        try
-                        {
-                            //we only keep shapeId, lugIndex, name, grade, price and volume
-                            if (el.Name.LocalName == "shapeId" || el.Name.LocalName == "lugIndex" || el.Name.LocalName == "name" || el.Name.LocalName == "grade" || el.Name.LocalName == "price")
-                                entry += (el.Value + ",,");
-                            else if (el.Name.LocalName == "volume")
-                                entry += (el.Value);
-                            //values.Add(el.Attribute("Value").Value.ToString());
-                        }
-                        catch { }
-                    }
-                    */
                     if (isDifferent)
                         entry += ",1";
                     values.Add(entry);
