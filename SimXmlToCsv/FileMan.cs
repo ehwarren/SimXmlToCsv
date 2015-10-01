@@ -39,6 +39,7 @@ namespace SimXmlToCsv
                             else if (el.Name.LocalName == "volume")
                                 entry += (el.Value);
                             //values.Add(el.Attribute("Value").Value.ToString());
+                            Console.WriteLine("TEST COMMIT");
                         }
                         catch { }
                     }
