@@ -8,7 +8,7 @@ namespace SimXmlToCsv
 {
     class Constants
     {
-        public static int version = 1;
-        public static int revision = 2;
+        public static int version = 2;
+        public static int revision = 0;
     }
 }
