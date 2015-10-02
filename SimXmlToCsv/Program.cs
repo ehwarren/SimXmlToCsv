@@ -17,9 +17,14 @@ namespace SimXmlToCsv
             FileMan fileManager = new FileMan();
             Console.WriteLine("Found Files: ");
             fileManager.echoFileNames();
-
-            //Parse each of the files...
-            fileManager.parseFiles();
+            char input;
+            do
+            {
+                Console.WriteLine("Would you like to output only the differences? (y/n)");
+                input = Console.ReadKey().KeyChar;
+            }
+            while (input != 'y' && input != 'n');
+            fileManager.parseFiles(input == 'y');
             Console.Write("Press the anykey to exit...");
             Console.ReadKey();
         }

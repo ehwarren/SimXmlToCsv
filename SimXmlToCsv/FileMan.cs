@@ -34,7 +34,7 @@ namespace SimXmlToCsv
             
         }
 
-        public void parseFiles()
+        public void parseFiles(bool outputDifferences)
         {
             //Load the XML data for the original file
             XDocument orig = XDocument.Load(originalFile[0]);
@@ -115,7 +115,16 @@ namespace SimXmlToCsv
                     }
                     if (isDifferent)
                         entry += ",1";
-                    values.Add(entry);
+                    if (outputDifferences)
+                    {
+                        if (isDifferent)
+                            values.Add(entry);
+                    }
+                    else
+                    {
+                        values.Add(entry);
+                    }
+
                 }
                 writeCSV(values, fname);
                 //write the new csv file  
