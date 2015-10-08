@@ -20,11 +20,25 @@ namespace SimXmlToCsv
             char input;
             do
             {
-                Console.WriteLine("Would you like to output only the differences? (y/n)");
+                Console.WriteLine("Would you like to output all results into one csv file? (y/n)");
                 input = Console.ReadKey().KeyChar;
             }
             while (input != 'y' && input != 'n');
-            fileManager.parseFiles(input == 'y');
+            if (input == 'y')
+            {
+                fileManager.parseFilesInOne();
+            }
+            else
+            {
+                do
+                {
+                    Console.WriteLine("Would you like to output only the differences? (y/n)");
+                    input = Console.ReadKey().KeyChar;
+                }
+                while (input != 'y' && input != 'n');
+                fileManager.parseFiles(input == 'y');
+            }
+           
             Console.Write("Press the anykey to exit...");
             Console.ReadKey();
         }
