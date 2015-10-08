@@ -34,7 +34,7 @@ namespace SimXmlToCsv
             
         }
 
-        public void parseFiles(bool outputDifferences)
+        public void parseFiles(bool outputDifferences, bool allInOneFile)
         {
             //Load the XML data for the original file
             XDocument orig = XDocument.Load(originalFile[0]);
@@ -49,6 +49,8 @@ namespace SimXmlToCsv
                 
                 //Load the xml data for the file we are comparing          
                 XDocument doc = XDocument.Load(fname);
+
+                //ALLINONE
 
                 //Make the first lines of our CSV file some useful headers.
                 values.Add("ORIGINAL DATA,,,,,,,,CHANGED DATA");
