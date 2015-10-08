@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using System.Xml.Linq;
-using System.Text.RegularExpressions;
 
 namespace SimXmlToCsv
 {
@@ -151,6 +148,7 @@ namespace SimXmlToCsv
             writeCSV(values, originalFile[0]);
 
         }
+
         public void parseFiles(bool outputDifferences)
         {
             //Load the XML data for the original file
