@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Xml.Linq;
+using System.Text.RegularExpressions;
 
 namespace SimXmlToCsv
 {
@@ -51,7 +52,7 @@ namespace SimXmlToCsv
 
             String currentLine = "";
             //Add the tags for each of the simulations
-            currentLine = "ORIGINAL DATA,,,,,,,,";
+            currentLine = "ORIGINAL DATA,,,,,,,";
             for (int i = 0; i < fileList.Length; i++)
             {
                 currentLine += "SIMULATION ";
@@ -134,66 +135,41 @@ namespace SimXmlToCsv
                         }
                         catch { }
                     }
-                }
-                if (isDifferent)
-                    entry += ",1";
-                currentLine += entry;
-                values.Add(entry);
-                currentLine = "";
-                writeCSV(values, originalFile[0]);
-        }
+                    if (isDifferent)
+                        entry += ",1,,";
+                    else
+                        entry += ",,,";
 
+
+                }
+                values.Add(entry);
+                currentLine += entry;
+
+                currentLine = "";
+
+        }
+            writeCSV(values, originalFile[0]);
 
         }
         public void parseFiles(bool outputDifferences)
         {
             //Load the XML data for the original file
             XDocument orig = XDocument.Load(originalFile[0]);
-            
-            //This list is used to store the values we grab from the XML files. 
-            //Each of the list values will eventuall be one line in our CSV file.
-            List<String> values = new List<String>();
-           
-            String currentLine = "";
-
-            if (allInOneFile)
-            {
-                //Add the tags for each of the simulations
-                currentLine = "ORIGINAL DATA,,,,,,,,";
-                for (int i = 0; i < fileList.Length; i++)
-                {
-                    currentLine += "SIMULATION ";
-                    currentLine += i + 1;
-                    currentLine += ",,,,,,,,";
-                }
-                values.Add(currentLine);
-                //add the column headers for each of the simulations
-                currentLine = "shapeId, lugIndex, name, grade, price, volume,,";
-                for (int i = 0; i < fileList.Length; i++)
-                {
-                    currentLine += "shapeId, lugIndex, name, grade, price, volume,isDifferent,,";
-                }
-                values.Add(currentLine);
-            }
-            else
-            {
-                currentLine = "ORIGINAL DATA,,,,,,,,CHANGED DATA";
-                values.Add(currentLine);
-                currentLine = "shapeId, lugIndex, name, grade, price, volume,,shapeId, lugIndex, name, grade, price, volume,isDifferent";
-                values.Add(currentLine);
-            }
-
-            //clear our currentLine variable because we've added it to the list already
-            currentLine = "";
 
             //Loop through each of the files we want to compare the original for..
             foreach (String fname in fileList)
             {
                 Console.WriteLine("Parsing: " + fname);
+                //This list is used to store the values we grab from the XML files. 
+                //Each of the list values will eventuall be one line in our CSV file.
+                List<String> values = new List<String>();
 
-                
                 //Load the xml data for the file we are comparing          
                 XDocument doc = XDocument.Load(fname);
+
+                //Make the first lines of our CSV file some useful headers.
+                values.Add("ORIGINAL DATA,,,,,,,,CHANGED DATA");
+                values.Add("shapeId, lugIndex, name, grade, price, volume,,shapeId, lugIndex, name, grade, price, volume,isDifferent");
 
                 //Loop through all of the XML data..
                 for (int j = 0; j < doc.Root.Elements().Count(); j++)
@@ -209,7 +185,7 @@ namespace SimXmlToCsv
                     string entry = "";
 
                     //Loop through each element in that section of of the XML file. Add the original data, then the changed data, and then compare
-                    for (int i=0; i < element.Elements().Count(); i++)
+                    for (int i = 0; i < element.Elements().Count(); i++)
                     {
                         try
                         {
@@ -263,32 +239,20 @@ namespace SimXmlToCsv
                     }
                     else
                     {
-                        //values.Add(entry);
-                        currentLine += entry;
+                        values.Add(entry);
                     }
-                    
 
                 }
-                if (allInOneFile)
-                {
-                    values.Add(currentLine);
-                    currentLine = "";
-                }
-                else
-                {
-                    writeCSV(values, fname);
-                }
-            }
-            if (allInOneFile)
-            {
-                writeCSV(values, originalFile[0]);
+                writeCSV(values, fname);
+                //write the new csv file  
             }
         }
 
         private void writeCSV(List<String> values, string fname)
         {
-            File.WriteAllLines(fname + ".csv", values);
-            Console.WriteLine("Succesfully wrote file: " + fname + ".csv");
+            string parentName = Path.GetFileName(fname);
+            File.WriteAllLines(parentName + ".csv", values);
+            Console.WriteLine("Succesfully wrote file: " + parentName + ".csv");
         }
         public void echoFileNames()
         {
