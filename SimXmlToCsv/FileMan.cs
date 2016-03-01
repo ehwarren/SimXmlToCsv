@@ -107,7 +107,7 @@ namespace SimXmlToCsv
                 //now we loop through each of our changed files and add the entry to the list
                 for (int sim = 0; sim < changes.Length; sim++)
                 {
-                    isDifferent = false;
+                    isDifferent = false;    //BugFix1 - Didn't clear the variable, so if the first file compared was different it would assume all the rest were too...
                     XElement element = changes[sim].Root.Elements().ElementAt(j);
                     for (int i = 0; i < element.Elements().Count(); i++)
                     {
